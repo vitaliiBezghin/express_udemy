@@ -8,7 +8,7 @@ const productController = require('../controllers/productsController')
 router.get('/products', productController.index)
 router.get('/products/:product_id', productController.show)
 router.post('/products', productController.store)
-router.put('/product/:product_id', productController.update)
-router.delete('/product/:product_id', productController.destroy)
+router.put('/products/:product_id', productController.update)
+router.delete('/products/:product_id', productController.destroy)
 
 module.exports = router
