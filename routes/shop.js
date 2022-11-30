@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
 })
 router.get('/getCart', shopController.cart)
 router.post('/addToCart', shopController.addToCart)
-router.put('/cartDecreaseProduct', shopController.cartDecreaseProduct)
+router.patch('/cartDecreaseProduct', shopController.decreaseProductQuantity)
 router.delete('/deleteFromCart', shopController.deleteFromCart)
 
 module.exports = router

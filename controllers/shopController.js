@@ -1,26 +1,21 @@
 const Product = require("../models/product");
 const User = require("../models/user");
 const {where} = require("sequelize");
+const mongodb = require('mongodb')
 
-exports.cart = (req, res, next) => {
-
+exports.cart = async (req, res, next) => {
+    res.json(await req.user.getCart())
 }
 
 exports.addToCart = async (req, res, next) => {
-    Product.findById(req.body.productId).then(product => {
-        return User.addToCart(req.user, product)
-    }).then(result => {
-        res.json(result)
-    }).catch(err => {
-        console.log(err)
-        res.json(err)
-    })
+   const product = await Product.findById(req.body.productId)
+  res.json(await req.user.addItemToCart(product))
 }
 
-exports.cartDecreaseProduct = (req, res, next) => {
-
+exports.decreaseProductQuantity = async (req, res, next) => {
+    res.json(await req.user.decreaseProductQuantity(req.body.productId))
 }
 
-exports.deleteFromCart = (req, res, next) => {
-
+exports.deleteFromCart = async (req, res, next) => {
+    res.json(await req.user.deleteItemFromCart(req.body.productId))
 }

@@ -6,13 +6,21 @@ const shop = require('./routes/shop')
 const admin = require('./routes/admin')
 const userRoutes = require('./routes/user')
 const rootDir = require("./util/path")
-// const orderRoutes = require('./routes/order')
+const orderRoutes = require('./routes/order')
 const mongoConnect = require('./util/database').mongoConnect
 const UserModel = require('./models/user')
 
 app.use((req, res, next) => {
     UserModel.findById('63847f69f664d247d9e6df09').then(user => {
-        req.user = user
+        req.user = new UserModel(
+            user._id,
+            user.firstname,
+            user.lastname,
+            user.email,
+            user.phone,
+            user.password,
+            user.cart ?? {}
+        )
         next()
     }).catch(err => {
         console.log(err)
@@ -23,8 +31,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use('/admin', admin)
 app.use('/shop', shop)
 app.use('/user', userRoutes)
-// app.use(shop)
-// app.use('/order', orderRoutes)
+app.use('/order', orderRoutes)
 // app.use(express.static(path.join(__dirname, 'public')))
 /*
 * 404 page

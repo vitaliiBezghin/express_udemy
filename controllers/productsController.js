@@ -11,7 +11,7 @@ exports.index = (req, res, next) => {
     })
 }
 exports.store = (req, res, next) => {
-    const product = new Product(req.body.title, req.body.imageUrl, req.body.description, req.body.price, new mongodb.ObjectId(req.user._id))
+    const product = new Product(req.body.title, req.body.price, req.body.description, req.body.imageUrl, new mongodb.ObjectId(req.user._id))
     product.save().then(product => {
         res.json(product)
     }).catch(err => {
@@ -44,10 +44,10 @@ exports.show = (req, res, next) => {
 }
 
 exports.destroy = (req, res, next) => {
-   Product.deleteById(req.params.product_id).then(result => {
-       res.json(result)
-   }).catch(err => {
-       console.log(err)
-       res.json(err)
-   })
+    Product.deleteById(req.params.product_id).then(result => {
+        res.json(result)
+    }).catch(err => {
+        console.log(err)
+        res.json(err)
+    })
 }
