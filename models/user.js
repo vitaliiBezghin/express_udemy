@@ -51,8 +51,6 @@ class User {
 
                 return product
             })
-
-            cart.totalPrice = totalPrice
             return cart
         }).catch(err => {
             console.log(err)
@@ -104,8 +102,8 @@ class User {
             if (product.productId == productId) {
                 if (product.quantity > 1) {
                     product.quantity -= 1
-                }else {
-                    return ;
+                } else {
+                    return;
                 }
             }
             return product
@@ -116,6 +114,33 @@ class User {
             {_id: new mongodb.ObjectId(this._id)},
             {$set: {cart: updatedCart}}
         )
+    }
+
+    getOrders() {
+        return getDb().collection('orders').find({'user._id': mongodb.ObjectId(this._id)}).toArray()
+    }
+    addOrder() {
+        const db = getDb()
+       return this.getCart().then(cartProducts => {
+           if (cartProducts.length == 0) {
+               throw {
+                   message: "Can't create order . Cart is empty ."
+               }
+           }
+            const order = {
+                items: cartProducts,
+                user:{
+                    _id: new mongodb.ObjectId(this._id),
+                }
+            }
+            return db.collection('orders').insertOne(order)
+        }).then(result => {
+            this.cart = {items: []}
+            return db.collection('users').updateOne(
+                {_id: new mongodb.ObjectId(this._id)},
+                {$set: {cart: {items: []}}}
+            )
+        })
     }
 
     static findById(userId) {
